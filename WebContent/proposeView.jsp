@@ -5,7 +5,11 @@
 <%@ page import = "javax.servlet.http.*,javax.servlet.*" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix = "c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/sql" prefix = "sql"%>
- 
+
+
+<% 
+if(session != null && session.getAttribute("id") != null){
+%>
 <html>
    <head>
       <title>Visualizza proposte</title>
@@ -41,7 +45,16 @@
             </tr>
          </c:forEach>
       </table>
- 			<td><a href="uploadFile.jsp">Carica nuova proposta</a></td>
+ 			
+ 			<a href="uploadFile.jsp">Carica nuova proposta</a>
+ 			 	
+ 			<form action=LogoutServlet method="post" enctype="multipart/form-data">
+				<input type="submit" value="Logout">
+			</form>
+			
+ 			<%}else{
+ 				response.sendRedirect("login.jsp");
+ 			} %>
 
    </body>
 </html>

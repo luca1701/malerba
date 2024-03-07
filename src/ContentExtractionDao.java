@@ -17,7 +17,7 @@ public class ContentExtractionDao {
 		
 	}
 	
-	public static boolean uploadPropose(Part file, String filename, HttpServletRequest request, HttpServletResponse response) {
+	public static boolean uploadPropose(String id, Part file, String filename) {
 		boolean status = false;
 		//
 		try {
@@ -25,20 +25,20 @@ public class ContentExtractionDao {
 			String url = "jdbc:mysql://127.0.0.1:3306/test";
 			Connection con = DriverManager.getConnection (url, "root", "root");
 			
-			Cookie[] cookies = request.getCookies();
+			/*Cookie[] cookies = request.getCookies();
 			for(Cookie c2: cookies) {
 				String tname = c2.getName();
 				if(tname.equals("username")) {
 					String name = c2.getValue();
-					
-					PreparedStatement ps = con.prepareStatement("SELECT * FROM client where name=?");
-					ps.setString(1, name);
+				
+					PreparedStatement ps = con.prepareStatement("SELECT * FROM client where id=?");
+					ps.setString(1, id);
 					ResultSet rs = ps.executeQuery();
 					status = rs.next();
-					if(status) {
-						int indexClient = rs.getInt(2);
+					*/
+			//if(status) {
 						//
-						ps = con.prepareStatement("INSERT into proposals(idClient, propose, propose_name) values(?,?,?)");
+						PreparedStatement ps = con.prepareStatement("INSERT into proposals(idClient, propose, propose_name) values(?,?,?)");
 									
 						InputStream img2 = file.getInputStream();
 						//byte[] byteArray = IOUtils.toByteArray(img2); 
@@ -49,20 +49,15 @@ public class ContentExtractionDao {
 						//Blob blob = con.createBlob();
 						//blob.setBytes(1, byteArray);
 						//ps.setBlob(1, blob);
-						ps.setInt(1, indexClient);
+						ps.setString(1, id);
 						ps.setBlob(2, img2);
 						ps.setString(3, filename);
 						ps.executeUpdate();						
-					}else {
-						System.out.println("Errore! loggati prima coglione");
-						response.sendRedirect("login.jsp");
-					}
 
-				}
-			}
+			//}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return status;
+		return !status;
 	}
 }

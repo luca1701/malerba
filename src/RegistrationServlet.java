@@ -1,6 +1,8 @@
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.*;
@@ -8,6 +10,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.apache.tika.exception.TikaException;
@@ -21,7 +24,8 @@ import com.optimaize.langdetect.frma.IOUtils;
 @MultipartConfig
 public class RegistrationServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-       
+	private Map<String, String> rememberMeMap = new ConcurrentHashMap<>();
+
     /**
      * @see HttpServlet#HttpServlet()
      */
@@ -60,7 +64,6 @@ public class RegistrationServlet extends HttpServlet {
         Part img = request.getPart("profile_img");
         long img_size = img.getSize();
         
-        System.out.println(request.getParameter("remember"));
         
         if(img_size>0 && img_size < MAXSIZEIMG){
         	System.out.println(img.getSize());
@@ -77,15 +80,15 @@ public class RegistrationServlet extends HttpServlet {
 					{
 						if(ContentExtraction.checkImagetType(img) == 1){
 							System.out.println("Errore formato file");
-				        	response.sendRedirect("Registration.jsp");
+				        	response.sendRedirect("registration.jsp");
 						}else {
 							byte[] profileImage = new byte[img.getInputStream().available()];
 							img.getInputStream().read(profileImage);
 							RegistrationDao.userRegistration(nomeUtente, profileImage);//salva su db
 							
-							Cookie c = new Cookie("username", nomeUtente);
-							response.addCookie(c);
-							
+							HttpSession session = request.getSession(true);
+							session.setAttribute("id", LoginDao.getUserId(nomeUtente));
+
 							byte[] salt = HashingPassword.saltGeneration();
 							byte[] hash = HashingPassword.hashGeneration(password, salt);
 							HashingPasswordDao.hashSaving(salt, hash, nomeUtente);

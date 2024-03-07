@@ -9,6 +9,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.http.Part;
 
 import org.apache.tika.exception.TikaException;
@@ -60,7 +61,8 @@ public class ContentExtractionServlet extends HttpServlet {
         	}
         }
        
-        if(file.getSize()>0) {
+        System.out.println(file.getSize());
+        if(file.getSize()>0 && file.getSize()<65535) {
         	try {
         		if(ContentExtraction.checkFileType(file) == 1){
         			//formato non accettato
@@ -69,7 +71,11 @@ public class ContentExtractionServlet extends HttpServlet {
 				}else {
 					//formato accettato
 					//!!!!ContentExtractionDao.checkUserID();
-					if(ContentExtractionDao.uploadPropose(file, filename, request, response)) {
+					HttpSession session = request.getSession(false);
+					
+					String id = session.getAttribute("id").toString();
+					System.out.println(id);
+					if(ContentExtractionDao.uploadPropose(id, file, filename)) {
 						System.out.println("Caricamento file effettuato");
 		        		response.sendRedirect("proposeView.jsp");
 					}else {
@@ -80,11 +86,12 @@ public class ContentExtractionServlet extends HttpServlet {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-        }else {
+        }else if(file.getSize()>65535) {
+			System.out.println("Dimensione file troppo grande");
+	}else {
         	//immagine non caricata
 			System.out.println("Proposta non caricata");
-        	response.sendRedirect("uploadFile.jsp");
-        }
+        	response.sendRedirect("uploadFile.jsp");}
 
 	}
 

@@ -8,17 +8,19 @@
 </head>
 <body>
 <% 
-Cookie[] cookies = request.getCookies();
+/*Cookie[] cookies = request.getCookies();
 if (cookies != null) {
    for (Cookie cookie : cookies) {
       if (cookie.getName().equals("remember")) {
      	out.print(cookie.getName());
      	session.invalidate();
-     	request.getRequestDispatcher("/LoginServlet?loginWithRememberMe=true").forward(request, response);
+     	response.sendRedirect("/LoginServlet");
         break;
       }
    }
 }
+*/
+if(session.getAttribute("id") == null){
 %>
 	<form method="post" action="LoginServlet">
 		<table>
@@ -40,12 +42,13 @@ if (cookies != null) {
 				<td></td>
 				<td><input type="submit" name="login" value="login"></td>	
 			</tr>	
-					
-			<td><a href="Registration.jsp">Registrati</td>
-
 		</table>
 	</form>
+	<a href="registration.jsp"> Registrati</a>
 	
+		<%}else{
+ 				response.sendRedirect("proposeView.jsp");
+ 			} %>
 
 
 </body>

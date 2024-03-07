@@ -1,25 +1,24 @@
 
 
 import java.io.IOException;
-import java.sql.ResultSet;
-
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 /**
- * Servlet implementation class ProposeView
+ * Servlet implementation class LogoutServlet
  */
-@WebServlet("/ProposeView")
-public class ProposeViewServlet extends HttpServlet {
+@WebServlet("/LogoutServlet")
+public class LogoutServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public ProposeViewServlet() {
+    public LogoutServlet() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -37,14 +36,10 @@ public class ProposeViewServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-		//sessione e cookie
 		doGet(request, response);
-		ResultSet rs = ProposeViewDao.getProposals();
-		
-		if(rs != null) {
-			//stampiamo il risultato. è giusto?
-			System.out.println(rs);
-		}
+		HttpSession session = request.getSession(true);
+		session.invalidate();
+		response.sendRedirect("login.jsp");
 	}
 
 }

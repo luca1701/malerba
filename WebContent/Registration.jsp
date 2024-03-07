@@ -7,6 +7,9 @@
 <title>Pagina di registrazione</title>
 </head>
 <body>
+<% 
+if(session.getAttribute("id") == null){
+%>
 	<form method="post" action="RegistrationServlet" enctype="multipart/form-data">
 		<table>
 			<tr>
@@ -30,17 +33,15 @@
 			</tr>
 			
 			<tr>
-				<td>Remember me <input type="checkbox" name="remember" value="bocchin"></td>
-			</tr>
-			
-			<tr>
 				<td><input type="submit" name="register" value="registrati"></td>
 			</tr>	
 			
-			<td><a href="login.jsp">Torna alla fase di login</td>
-
 		</table>
 	</form>
-
+	<a href="login.jsp">Torna alla fase di login</a>
+	
+		<%}else{
+ 				response.sendRedirect("proposeView.jsp");
+ 			} %>
 </body>
 </html>

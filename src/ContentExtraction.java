@@ -54,10 +54,11 @@ public class ContentExtraction {
 
 	public static int checkFileType(Part p) throws IOException, AccessException, TikaException, SAXException{
 		long start = System.currentTimeMillis();
-		BodyContentHandler handler = new BodyContentHandler();
+		BodyContentHandler handler = new BodyContentHandler(-1);
 		Metadata metadata = new Metadata();
 		//FileInputStream content = new FileInputStream(fileName);
 		Parser parser = new AutoDetectParser();
+		System.out.println(p.getSize());
 		parser.parse(p.getInputStream(), handler, metadata, new ParseContext());
 		for(String name:metadata.names()) {
 			if(name.equals("Content-Type")){

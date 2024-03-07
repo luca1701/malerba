@@ -1,6 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
+    
 <!DOCTYPE html>
+<%
+if(session != null && session.getAttribute("id") != null){
+%>
 <html>
 	<head>
 		<meta http-equiv="Content-Type" content="text/html" charset="ISO-8859-1">
@@ -16,6 +20,10 @@
 			<br>
 			<input type="submit" value="Carica File"/>
 		</form>
-		 	<td><a href="proposeView.jsp">Visualizze proposte caricate</td>
+		 	<a href="proposeView.jsp">Visualizze proposte caricate</a>
+		 	 <%}else{
+ 				response.sendRedirect("login.jsp");
+ 			} %>
 	</body>
+	
 </html>
